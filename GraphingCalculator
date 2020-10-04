@@ -1,0 +1,101 @@
+import javax.swing.*;
+import java.awt.GridLayout;
+import java.util.ArrayList;
+
+class GraphingCalculator {
+    static JFrame frame = new JFrame("Graphing Calculator");
+    static JLabel label = new JLabel();
+    static JTextArea area = new JTextArea();
+    static JLabel graph = new JLabel() {
+        public void paintComponent(Graphics g) {
+            int y;
+            super.paintComponent(g);
+            g.setColor(Color.black);
+        }
+    };
+    static String input;
+    static String[] array;
+    static int j;
+    static int x = -10;
+    static int i = 0;
+    static int y;
+    public static void init() {
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        label.setlayout(new GridLayout(2, 1));
+        label.add(area);
+        label.add(graph);
+        frame.add(label);
+        frame.setVisible(true);
+        area.setText("Please enter a formula\n");
+    }
+    public static void calc() {
+        while (x <= 10) {
+            array = input.split("");
+            ArrayList<String> A = new ArrayList<>();
+            while (j < input.length()) {
+                if (array[j].equals("x")) {
+                    array[j] = k;
+                }
+                j++;
+                for (i = 0; i < array.length; i++) {
+                    A.add(array[i]);
+                }
+                i = 0;
+                while(i < A.size() - 1) {
+                    switch (A.get(i)) {
+                        case "/":
+                        A.set(i-1, String.valueOf(Double.valueOf(A.get(i-1)) / Double.valueOf(A.get(i+1))));
+                        A.remove(i);
+                        A.remove(i);
+                        break;
+                        case "*":
+                        A.set(i-1, String.valueOf(Double.valueOf(A.get(i-1)) * Double.valueOf(A.get(i+1))));
+                        A.remove(i);
+                        A.remove(i);
+                        break;
+                        default:
+                        i++;
+                        break;
+                    }
+                }
+                i = 0;
+                while(i < A.size()) {
+                    switch (A.get(i)) {
+                        case "+":
+                        A.set(i-1, String.valueOf(Double.valueOf(A.get(i-1)) + Double.valueOf(A.get(i+1))));
+                        A.remove(i);
+                        A.remove(i);
+                        break;
+                        case "-":
+                        A.set(i-1, String.valueOf(Double.valueOf(A.get(i-1)) - Double.valueOf(A.get(i+1))));
+                        A.remove(i);
+                        A.remove(i);
+                        break;
+                        default:
+                        i++;
+                        break;
+                    }
+                }
+                y = A.get(0);
+                input = "";
+                A.remove(0);
+                Arrays.fill(array, null);
+            }
+            g.fillOval(x, y, 1, 1);
+            x++;    
+        }
+    }
+    static KeyListener listener = new KeyAdapter() {
+        public void keyPressed(KeyEvent ev) {
+            int keyCode = ev.getKeyCode();
+            if (keyCode == KeyEvent.VK_ENTER) {
+                input = area.getText().substring(22, area.getText().length);
+                area.setText("");
+                calc();
+            }
+        }
+    };
+    public static void main(String[] args) {
+        init();
+    }
+}
